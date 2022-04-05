@@ -49,7 +49,7 @@ echo Time to choose. && goto wrapperidle
 cls
 pushd "..\..\"
 echo Cloning repository from GitHub...
-call Redrawn-Installer-main\Redrawn-Installer-main\PortableGit\bin\git.exe clone https://github.com/MiiArtisan/Redrawn.git
+call Redrawn-Installer-main\Redrawn-Installer-main\PortableGit\bin\git.exe clone https://github.com/RedrawnWrapper/Redrawn.git
 echo Redrawn Has Been Installed
 pause
 goto cls
