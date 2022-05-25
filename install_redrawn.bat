@@ -47,13 +47,38 @@ echo Time to choose. && goto wrapperidle
 
 :download
 cls
-pushd "..\..\"
-echo Cloning repository from GitHub...
-call Redrawn-Installer-main\Redrawn-Installer-main\PortableGit\bin\git.exe clone https://github.com/RedrawnWrapper/Redrawn-Closed-Beta.git
-echo Redrawn Has Been Installed
-pause
-goto cls
+echo Sorry, 
+echo but due to so many bugs being inside of redrawn, 
+echo you can't install the software right now. 
+echo Would you like to get Vyond Legacy Offline Instead?
+echo:
+echo Enter y for yes
+echo Enter n for no
+:choices
+echo:
+
+:::::::::::::
+:: Choices ::
+:::::::::::::
+
+set /p CHOICE=Response:
+if "!choice!"=="n" goto dontinstallvyond
+if "!choice!"=="y" goto downloadVyond
+echo Time to choose. && goto choices
 
 :exit
 echo the Redrawn installer has been closed.
 pause & exit
+
+:dontinstallvyond
+echo You desided to not install Vyond Legacy Offline. The Instaler shall now close.
+pause & exit
+
+:downloadVyond
+cls
+pushd "..\..\"
+echo Cloning repository from GitHub...
+call Redrawn-Installer-main\Redrawn-Installer-main\PortableGit\bin\git.exe clone https://github.com/josephanimate2021/Vyond-Legacy-Offline.git
+echo Vyond Legacy Offline Has Been Installed
+pause
+goto cls
