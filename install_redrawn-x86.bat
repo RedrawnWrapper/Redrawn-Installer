@@ -2,10 +2,29 @@ title Redrawn Installer
 :: Redrawn Installer
 :: Author: joseph the animator#2292 & IndyTheNerd#2501
 :: License: MIT
-
+:: take me to my name please.
+cd %USERPROFILE%
+@echo off && cls
+:: check to see if both redrawn and redrawn express exists and run their start scripts
+if exist %USERPROFILE%\Redrawn (
+	:: check for admin rights just in case
+	set "params=%*"
+	cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
+	title Redrawn [Booting Up]
+	cd %USERPROFILE%\Redrawn
+	call Redrawn.exe
+	exit
+)
+if exist %USERPROFILE%\Redrawn-Express (
+	cd Redrawn-Express
+	call run.bat
+)
+:: check for admin rights
+set "params=%*"
+cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
 :: Initialize (stop command spam, clean screen, make variables work, set to UTF-8)
 @echo off && cls
-:: take me to my name please.
+:: take me to my name again please.
 cd %USERPROFILE%
 
 :: Predefine variables
