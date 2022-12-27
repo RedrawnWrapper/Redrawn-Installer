@@ -164,5 +164,5 @@ git clone https://github.com/RedrawnWrapper/Redrawn.git
 echo Redrawn Offline has been sucessfully cloned. running the start script for redrawn...
 timeout 4
 cd Redrawn
-start start_redrawn.bat
+start Redrawn.exe
 exit
