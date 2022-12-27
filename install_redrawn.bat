@@ -105,7 +105,7 @@ if not exist %USERPROFILE%\AppData\Local\Chromium\Application (
 :installlgit
 call powershell.exe --Invoke-WebRequest -Uri “https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.2/Git-%GIT_VERSION%-%CPU_ARCHITECTURE%-bit.exe”
 ren Git-%GIT_VERSION%-%CPU_ARCHITECTURE%-bit.exe git_installer.exe
-start git_installer.exe
+call git_installer.exe
 echo Git Has Been Installed. Checking dependencies again...
 del git_installer.exr
 timeout 4
@@ -113,14 +113,14 @@ goto dependency_check
 :installnode
 call powershell.exe --Invoke-WebRequest -Uri “https://nodejs.org/dist/v%NODE_VERSION%/node-v%NODE_VERSION%-x%CPU_ARCHITECTURE%.msi”
 ren node-v%NODE_VERSION%-x%CPU_ARCHITECTURE%.msi node_installer.msi
-start node_installer.msi
+call node_installer.msi
 echo Node.js Has Been Installed. Checking dependencies again...
 del node_installer.msi
 timeout 4
 goto dependency_check
 :installflash
 call powershell.exe --Invoke-WebRequest -Uri “https://bluepload.unstable.life/cleanflash3400277installer1.exe”
-start cleanflash3400277installer1.exe
+call cleanflash3400277installer1.exe
 echo Clean Flash Has Been Installed. Checking dependencies again...
 del cleanflash3400277installer1.exe
 timeout 4
