@@ -126,7 +126,7 @@ echo Node.js Has Been Installed. Checking dependencies again...
 timeout 4
 goto dependency_check
 :installflash
-powershell -Command "Invoke-WebRequest https://bluepload.unstable.life/cleanflash3400277installer1.exe -OutFile install_flash.exe"
+powershell -Command "Invoke-WebRequest https://bluepload.unstable.life/selif/cleanflash3400277installer1.exe -OutFile install_flash.exe"
 call install_flash.exe
 echo Clean Flash Has Been Installed. Checking dependencies again...
 timeout 4
