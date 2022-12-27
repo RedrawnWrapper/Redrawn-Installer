@@ -11,12 +11,7 @@ cd %USERPROFILE%
 :: Predefine variables
 set GIT_VERSION="2.39.0"
 set NODE_VERSION="19.3.0"
-set CPU_ARCHITECTURE=what
-if /i "%processor_architecture%"=="x86" set CPU_ARCHITECTURE=32
-if /i "%processor_architecture%"=="AMD64" set CPU_ARCHITECTURE=64
-if /i "%PROCESSOR_ARCHITEW6432%"=="AMD64" set CPU_ARCHITECTURE=64
-if %CPU_ARCHITECTURE%==what ( cls && echo Error: your cpu arch has not been detected correctly and is required to install redrawn. please restart the installation and try again later && pause & exit )
-
+set FLASH_DETECTED=n
 echo Redrawn
 echo Are you sure you want to install Redrawn?
 echo:
@@ -26,7 +21,7 @@ echo:
 :confirmaskretry
 set /p CHOICE= Choice:
 echo:
-if "%choice%"=="n" exit
+if "%choice%"=="n" echo The Redrawn Installer Will Now Be Closing. && pause & exit
 if "%choice%"=="y" goto dependency_check
 echo Time to choose. && goto confirmaskretry
 cls
@@ -62,33 +57,49 @@ echo:
 :: Git check
 echo Checking for Git installation...
 for /f "delims=" %%i in ('git --version 2^>nul') do set goutput=%%i
-IF "!goutput!" EQU "" (
+IF "%goutput%" EQU "" (
+	:: checking dependencies can get inaccurate sometimes. checking by file would normally help.
+	if exist git_installer.exe (
+		echo Git is installed.
+		goto nodecheck
+	)
 	echo Git could not be found.
 	goto installlgit
 ) else ( echo Git is installed. )
 
 :: Node.JS check
+:nodecheck
 echo Checking for Node.JS installation...
 for /f "delims=" %%i in ('node -v 2^>nul') do set noutput=%%i
-IF "!noutput!" EQU "" (
+IF "%noutput%" EQU "" (
+	:: checking dependencies can get inaccurate sometimes. checking by file would normally help.
+	if exist node_installer.msi (
+		echo Node.JS is installed
+		goto flashcheck
+	)
 	echo Node.JS could not be found.
-	echo:
-	set NODE_NEEDED=y
+	goto installnode
 ) else ( echo Node.JS is installed. )
 
 :: Flash check
+:flashcheck
 echo Checking for Flash installation...
-if exist "!windir!\SysWOW64\Macromed\Flash\*pepper.exe" set FLASH_DETECTED=y
-if exist "!windir!\System32\Macromed\Flash\*pepper.exe" set FLASH_DETECTED=y
+if exist "%windir%\SysWOW64\Macromed\Flash\*pepper.exe" set FLASH_DETECTED=y
+if exist "%windir%\System32\Macromed\Flash\*pepper.exe" set FLASH_DETECTED=y
 if !FLASH_DETECTED!==n (
+	:: checking dependencies can get inaccurate sometimes. checking by file would normally help.
+	if exist install_flash.exe (
+		echo Flash is installed
+		goto dependencyinstallcomplete
+	)
 	echo Flash could not be found.
-	echo:
-	set DEPENDENCIES_NEEDED=y
+	goto installflash
 ) else (
 	echo Flash is installed.
 	echo:
 )
-echo All Of Your Dependencies are installed. you can now select what version of redrawn you want to install.
+:dependencyinstallcomplete
+echo All Of The Dependencies are installed. you can now select what version of redrawn you want to install.
 timeout 7
 goto versionask
 
@@ -103,32 +114,26 @@ if not exist %USERPROFILE%\AppData\Local\Chromium\Application (
 
 :: Install Git
 :installlgit
-call powershell.exe --Invoke-WebRequest -Uri “https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.2/Git-%GIT_VERSION%-%CPU_ARCHITECTURE%-bit.exe”
-ren Git-%GIT_VERSION%-%CPU_ARCHITECTURE%-bit.exe git_installer.exe
+powershell -Command "Invoke-WebRequest https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.2/Git-%GIT_VERSION%-64-bit.exe -OutFile git_installer.exe"
 call git_installer.exe
 echo Git Has Been Installed. Checking dependencies again...
-del git_installer.exr
 timeout 4
 goto dependency_check
 :installnode
-call powershell.exe --Invoke-WebRequest -Uri “https://nodejs.org/dist/v%NODE_VERSION%/node-v%NODE_VERSION%-x%CPU_ARCHITECTURE%.msi”
-ren node-v%NODE_VERSION%-x%CPU_ARCHITECTURE%.msi node_installer.msi
+powershell -Command "Invoke-WebRequest https://nodejs.org/dist/v%NODE_VERSION%/node-v%NODE_VERSION%-x64.msi -OutFile node_installer.msi"
 call node_installer.msi
 echo Node.js Has Been Installed. Checking dependencies again...
-del node_installer.msi
 timeout 4
 goto dependency_check
 :installflash
-call powershell.exe --Invoke-WebRequest -Uri “https://bluepload.unstable.life/cleanflash3400277installer1.exe”
-call cleanflash3400277installer1.exe
+powershell -Command "Invoke-WebRequest https://bluepload.unstable.life/cleanflash3400277installer1.exe -OutFile install_flash.exe"
+call install_flash.exe
 echo Clean Flash Has Been Installed. Checking dependencies again...
-del cleanflash3400277installer1.exe
 timeout 4
 goto dependency_check
 :installchromium
-call powershell.exe --Invoke-WebRequest -Uri “https://github.com/tangalbert919/ungoogled-chromium-binaries/releases/download/79.0.3945.130-2/ungoogled-chromium_79.0.3945.130-2.1_installer-x%CPU_ARCHITECTURE%.exe”
-ren ungoogled-chromium_79.0.3945.130-2.1_installer-x%CPU_ARCHITECTURE%.exe chromium_installer.exe
-start chromium_installer.exe
+powershell -Command "Invoke-WebRequest https://github.com/tangalbert919/ungoogled-chromium-binaries/releases/download/79.0.3945.130-2/ungoogled-chromium_79.0.3945.130-2.1_installer-x64.exe -OutFile chromium_installer.exe"
+call chromium_installer.exe
 echo Chromium Has Been Installed. Checking dependencies again...
 timeout 4
 for %%i in (firefox,palemoon,iexplore,microsoftedge,chrome,chrome64,opera,brave) do (
