@@ -1,13 +1,31 @@
-title Redrawn Installer
+title Redrawn
 :: Redrawn Installer
 :: Author: joseph the animator#2292 & IndyTheNerd#2501
 :: License: MIT
-
 :: Initialize (stop command spam, clean screen, make variables work, set to UTF-8)
-@echo off && cls
 :: take me to my name please.
 cd %USERPROFILE%
-
+@echo off && cls
+:: check to see if both redrawn and redrawn express exists and run their start scripts
+if exist %USERPROFILE%\Redrawn (
+	:: check for admin rights just in case
+	set "params=%*"
+	cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
+	title Redrawn [Booting Up]
+	cd %USERPROFILE%\Redrawn
+	call Redrawn.exe
+	exit
+)
+if exist %USERPROFILE%\Redrawn-Express (
+	cd Redrawn-Express
+	call run.bat
+)
+:: check for admin rights
+set "params=%*"
+cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
+:: take me to my name again please.
+cd %USERPROFILE%
+title Redrawn Installer
 :: Predefine variables
 set GIT_VERSION="2.39.0"
 set NODE_VERSION="19.3.0"
@@ -126,7 +144,7 @@ echo Node.js Has Been Installed. Checking dependencies again...
 timeout 4
 goto dependency_check
 :installflash
-powershell -Command "Invoke-WebRequest https://bluepload.unstable.life/selif/cleanflash3400277installer1.exe -OutFile install_flash.exe"
+powershell -Command "Invoke-WebRequest https://bluepload.unstable.life/cleanflash3400277installer1.exe -OutFile install_flash.exe"
 call install_flash.exe
 echo Clean Flash Has Been Installed. Checking dependencies again...
 timeout 4
@@ -164,5 +182,5 @@ git clone https://github.com/RedrawnWrapper/Redrawn.git
 echo Redrawn Offline has been sucessfully cloned. running the start script for redrawn...
 timeout 4
 cd Redrawn
-start Redrawn.exe
+call Redrawn.exe
 exit
