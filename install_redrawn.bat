@@ -6,32 +6,6 @@ title Redrawn
 @echo off && cls
 set "params=%*"
 cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
-if exist %USERPROFILE%\Redrawn (
-	if exist %USERPROFILE%\Redrawn-Express (
-		echo The Installer has noticed that both Redrawn Offline And Redrawn Express already exists. witch one do you want to start up?
-		echo 1 Redrawn Offline
-		echo 2 Redrawn Express
-		set /p CHOICE= Choice:
-		if "%choice%"=="1" goto startredrawnoffline
-		if "%choice%"=="2" goto startredrawnexpress
-	) else (
-		echo Do You want to install another redrawn version or start Redrawn Offline?
-		echo 1 Install another redrawn version
-		echo 2 Start redrawn offline
-		set /p CHOICE= Choice:
-		if "%choice%"=="1" goto begininstall
-		if "%choice%"=="2" goto startredrawnoffline
-	)
-)
-if exist %USERPROFILE%\Redrawn-Express (
-	echo Do You want to install another redrawn version or start Redrawn  Express?
-	echo 1 Install another redrawn version
-	echo 2 Start redrawn express
-	set /p CHOICE= Choice:
-	if "%choice%"=="1" goto begininstall
-	if "%choice%"=="2" goto startredrawnexpress
-)
-:begininstall
 :: take me to my name please.
 cd %USERPROFILE%
 title Redrawn Installer
@@ -48,7 +22,7 @@ echo:
 :confirmaskretry
 set /p CHOICE= Choice:
 echo:
-if "%choice%"=="n" echo The Redrawn Installer Will Now Be Closing. && pause & exit
+if "%choice%"=="n" echo The Redrawn Installer Will Now Be Going Into Dualboot Mode. && goto dualboot
 if "%choice%"=="y" goto dependency_check
 echo Time to choose. && goto confirmaskretry
 cls
@@ -181,9 +155,7 @@ echo Note: Redrawn might not start after all of the dependencies install.
 echo a 2 minute timer has been put in place to ensure that redrawn starts after all of the npm dependencies get installed.
 echo All Quedtions and anwsers about the redrawn install script file will be anwsered on the redrawn discord server.
 timeout 60
-:startredrawnexpress
 cd %USERPROFILE%\Redrawn-Express
-echo Starting Redrawn Express...
 start run.bat
 timeout 120
 start %USERPROFILE%\AppData\Local\Chromium\Application\chrome.exe --app=http://localhost/
@@ -192,8 +164,9 @@ npm start
 git clone https://github.com/RedrawnWrapper/Redrawn.git
 echo Redrawn Offline has been sucessfully cloned. running the start script for redrawn...
 timeout 4
-:startredrawnoffline
 cd %USERPROFILE%\Redrawn
-echo Starting Redrawn Offline...
 call Redrawn.exe
 exit
+:dualboot
+cd %USERPROFILE%\Downloads\Redrawn-Installer-main\Redrawn-Installer-main
+call dualboot.bat
