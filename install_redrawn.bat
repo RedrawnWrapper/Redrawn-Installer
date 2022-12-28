@@ -154,7 +154,7 @@ echo Redrawn Express has been sucessfully cloned. running the start script for r
 timeout 4
 echo Note: Redrawn might not start after all of the dependencies install. 
 echo a 2 minute timer has been put in place to ensure that redrawn starts after all of the npm dependencies get installed.
-echo All Quedtions and anwsers about the redrawn install script file will be anwsered on the redrawn discord server.
+echo All Quedtions about the redrawn install script file will be anwsered on the redrawn discord server.
 timeout 60
 cd %USERPROFILE%\Redrawn-Express
 start run.bat
