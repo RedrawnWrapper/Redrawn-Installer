@@ -3,62 +3,36 @@ title Redrawn
 :: Author: joseph the animator#2292 & IndyTheNerd#2501
 :: License: MIT
 :: Initialize (stop command spam, clean screen, make variables work, set to UTF-8)
-:: take me to my name please.
-cd %USERPROFILE%
 @echo off && cls
-:: check to see if both redrawn and redrawn express exists and run their start scripts
+set "params=%*"
+cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
 if exist %USERPROFILE%\Redrawn (
-        if exist %USERPROFILE%\Redrawn-Express (
-	        echo The installer has noticed that both Redrawn Offline And Redrawn Express already exists.
-		echo witch one do you want to start up?
-		echo 1 Redrawn Offline (Not Recomended)
+	if exist %USERPROFILE%\Redrawn-Express (
+		echo The Installer has noticed that both Redrawn Offline And Redrawn Express already exists. witch one do you want to start up?
+		echo 1 Redrawn Offline
 		echo 2 Redrawn Express
-	        set /p RESPONSE=Response:
-		if %RESPONSE%==1 (
-		        echo Starting Redrawn Offline...
-		        title Redrawn [Booting Up]
-	                cd %USERPROFILE%\Redrawn
-	                call Redrawn.exe
-			exit
-		)
-		if %RESPONSE%==2 (
-		        echo Starting Redrawn Express...
-	                cd %USERPROFILE%\Redrawn-Express
-			start %USERPROFILE%\AppData\Local\Chromium\Application\chrome.exe --app=http://localhost/
-	                call run.bat
-		)
-        ) else (
-	        echo Do you want to install Redrawn Express or begin with the Redrawn Offline Startup?
-	        echo y for yes (for installing redrawn express)
-		echo n for no (for starting up redrawn offline [Not Recomended])
-		set /p RESPONSE=Response:
-		if %RESPONSE%==y (
-		        echo Starting Up Redrawn Offline...
-	                title Redrawn [Booting Up]
-			cd %USERPROFILE%\Redrawn
-			call Redrawn.exe
-		)
-	        if %RESPONSE%==n ( goto begininstall )
+		set /p CHOICE= Choice:
+		if "%choice%"=="1" goto startredrawnoffline
+		if "%choice%"=="2" goto startredrawnexpress
+	) else (
+		echo Do You want to install another redrawn version or start Redrawn Offline?
+		echo 1 Install another redrawn version
+		echo 2 Start redrawn offline
+		set /p CHOICE= Choice:
+		if "%choice%"=="1" goto begininstall
+		if "%choice%"=="2" goto startredrawnoffline
 	)
 )
 if exist %USERPROFILE%\Redrawn-Express (
-        echo Do you want to install Redrawn Offline or begin with the Redrawn Express Startup?
-	echo y for yes (for installing redrawn offline [Not Recomended])
-	echo n for no (for starting up Redrawn Express)
-	set /p RESPONSE=Response:
-	if %RESPONSE%==y (
-	        echo Starting Up Redrawn Express...
-	        cd Redrawn-Express
-		start %USERPROFILE%\AppData\Local\Chromium\Application\chrome.exe --app=http://localhost/
-		call run.bat
-	)
-	if %RESPONSE%==n ( goto begininstall )
+	echo Do You want to install another redrawn version or start Redrawn  Express?
+	echo 1 Install another redrawn version
+	echo 2 Start redrawn express
+	set /p CHOICE= Choice:
+	if "%choice%"=="1" goto begininstall
+	if "%choice%"=="2" goto startredrawnexpress
 )
 :begininstall
-:: check for admin rights
-set "params=%*"
-cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
-:: take me to my name again please.
+:: take me to my name please.
 cd %USERPROFILE%
 title Redrawn Installer
 :: Predefine variables
@@ -207,7 +181,9 @@ echo Note: Redrawn might not start after all of the dependencies install.
 echo a 2 minute timer has been put in place to ensure that redrawn starts after all of the npm dependencies get installed.
 echo All Quedtions and anwsers about the redrawn install script file will be anwsered on the redrawn discord server.
 timeout 60
-cd Redrawn-Express
+:startredrawnexpress
+cd %USERPROFILE%\Redrawn-Express
+echo Starting Redrawn Express...
 start run.bat
 timeout 120
 start %USERPROFILE%\AppData\Local\Chromium\Application\chrome.exe --app=http://localhost/
@@ -216,6 +192,8 @@ npm start
 git clone https://github.com/RedrawnWrapper/Redrawn.git
 echo Redrawn Offline has been sucessfully cloned. running the start script for redrawn...
 timeout 4
-cd Redrawn
+:startredrawnoffline
+cd %USERPROFILE%\Redrawn
+echo Starting Redrawn Offline...
 call Redrawn.exe
 exit
