@@ -16,14 +16,15 @@ set FLASH_DETECTED=n
 echo Redrawn
 echo Are you sure you want to install Redrawn?
 echo:
-echo Type y to install Redrawn, or type n to close
+echo Type y to install Redrawn, type dualboot to enter dualboot mode, or type redrawn to start Redrawn Offline.
 echo this script.
 echo:
 :confirmaskretry
 set /p CHOICE= Choice:
 echo:
-if "%choice%"=="n" echo The Redrawn Installer Will Now Be Going Into Dualboot Mode. && goto dualboot
+if "%choice%"=="dualboot" echo The Redrawn Installer Will Now Be Going Into Dualboot Mode. && goto dualboot
 if "%choice%"=="y" goto dependency_check
+if "%choice%"=="redrawn" echo The Redrawn Installer Will Now Be Booting Into Redrawn Offline && goto redrawn
 echo Time to choose. && goto confirmaskretry
 cls
 
@@ -170,3 +171,6 @@ exit
 :dualboot
 cd %USERPROFILE%\Downloads\Redrawn-Installer-main\Redrawn-Installer-main
 call dualboot.bat
+:redrawn
+cd %USERPROFILE%\Downloads\Redrawn-Installer-main\Redrawn-Installer-main
+call redrawn.bat
