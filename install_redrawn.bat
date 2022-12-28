@@ -8,18 +8,53 @@ cd %USERPROFILE%
 @echo off && cls
 :: check to see if both redrawn and redrawn express exists and run their start scripts
 if exist %USERPROFILE%\Redrawn (
-	:: check for admin rights just in case
-	set "params=%*"
-	cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
-	title Redrawn [Booting Up]
-	cd %USERPROFILE%\Redrawn
-	call Redrawn.exe
-	exit
+        if exist %USERPROFILE%\Redrawn-Express (
+	        echo The installer has noticed that both Redrawn Offline And Redrawn Express already exists.
+		echo witch one do you want to start up?
+		echo 1 Redrawn Offline (Not Recomended)
+		echo 2 Redrawn Express
+	        set /p RESPONSE=Response:
+		if %RESPONSE%==1 (
+		        echo Starting Redrawn Offline...
+		        title Redrawn [Booting Up]
+	                cd %USERPROFILE%\Redrawn
+	                call Redrawn.exe
+			exit
+		)
+		if %RESPONSE%==2 (
+		        echo Starting Redrawn Express...
+	                cd %USERPROFILE%\Redrawn-Express
+			start %USERPROFILE%\AppData\Local\Chromium\Application\chrome.exe --app=http://localhost/
+	                call run.bat
+		)
+        ) else (
+	        echo Do you want to install Redrawn Express or begin with the Redrawn Offline Startup?
+	        echo y for yes (for installing redrawn express)
+		echo n for no (for starting up redrawn offline [Not Recomended])
+		set /p RESPONSE=Response:
+		if %RESPONSE%==y (
+		        echo Starting Up Redrawn Offline...
+	                title Redrawn [Booting Up]
+			cd %USERPROFILE%\Redrawn
+			call Redrawn.exe
+		)
+	        if %RESPONSE%==n ( goto begininstall )
+	)
 )
 if exist %USERPROFILE%\Redrawn-Express (
-	cd Redrawn-Express
-	call run.bat
+        echo Do you want to install Redrawn Offline or begin with the Redrawn Express Startup?
+	echo y for yes (for installing redrawn offline [Not Recomended])
+	echo n for no (for starting up Redrawn Express)
+	set /p RESPONSE=Response:
+	if %RESPONSE%==y (
+	        echo Starting Up Redrawn Express...
+	        cd Redrawn-Express
+		start %USERPROFILE%\AppData\Local\Chromium\Application\chrome.exe --app=http://localhost/
+		call run.bat
+	)
+	if %RESPONSE%==n ( goto begininstall )
 )
+:begininstall
 :: check for admin rights
 set "params=%*"
 cd /d "%~dp0" && ( if exist "%temp%\getadmin.vbs" del "%temp%\getadmin.vbs" ) && fsutil dirty query %systemdrive% 1>nul 2>nul || (  echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~sdp0"" && %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs" && "%temp%\getadmin.vbs" && exit /B )
