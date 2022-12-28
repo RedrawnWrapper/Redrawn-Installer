@@ -1,8 +1,6 @@
 @echo off
-if exist %USERPROFILE%\Redrawn (
-	if exist %USERPROFILE%\Redrawn-Express goto startredrawnexpress
-) else goto startredrawnoffline
 if exist %USERPROFILE%\Redrawn-Express goto startredrawnexpress
+if exist %USERPROFILE%\Redrawn goto startredrawnoffline
 echo Redrawn Offline and Redrawn Express was not detected on your system && pause && exit
 :startredrawnoffline
 cd %USERPROFILE%\Redrawn
