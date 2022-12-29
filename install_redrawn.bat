@@ -86,19 +86,12 @@ IF "%noutput%" EQU "" (
 :: Flash check
 :flashcheck
 echo Checking for Flash installation...
-if exist "%windir%\SysWOW64\Macromed\Flash\*pepper.exe" set FLASH_DETECTED=y
-if exist "%windir%\System32\Macromed\Flash\*pepper.exe" set FLASH_DETECTED=y
-if !FLASH_DETECTED!==n (
-	:: checking dependencies can get inaccurate sometimes. checking by file would normally help.
-	if exist install_flash.exe (
-		echo Flash is installed
-		goto dependencyinstallcomplete
-	)
+if exist install_flash.exe (
+	echo Flash is installed
+	goto dependencyinstallcomplete
+) else (
 	echo Flash could not be found.
 	goto installflash
-) else (
-	echo Flash is installed.
-	echo:
 )
 :dependencyinstallcomplete
 echo All Of The Dependencies are installed. you can now select what version of redrawn you want to install.
